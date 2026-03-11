@@ -7,8 +7,10 @@
 
 ## 專案目標
 
+本專案建議的工作流如下：`LoRa + MCU 接線 -> 更新 MCU bootloader -> 刷入 firmware.uf2`
+
 - 使用便宜且容易取得的 `nRF52840` 開發板建立 Meshtastic 節點
-- 提供清楚可重現的 bootloader 更新流程
+- 提供清楚可重現的硬體接線、bootloader 更新與韌體安裝流程
 - 提供更新 bootloader 後的 `firmware.uf2` 安裝方式
 - 保留自行修改 `.h` 接腳定義後重新編譯的彈性
 
@@ -20,6 +22,33 @@
 | MCU 參考文件 | [nice!nano official docs](https://nicekeyboards.com/docs/nice-nano/) |
 | LoRa 晶片 | `Adafruit RFM95W` |
 | 節點類型 | 單晶片 MCU Meshtastic 節點 |
+
+## 硬體接線
+
+Meshtastic 針對 `nRF52840 Pro Micro` 佈局有預設腳位定義。使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` 時，請依照下表逐一接線，並仔細核對 `SuperMini nRF52840` 板子上的金色絲印文字。
+
+接線順序建議先完成所有硬體接線，再進行 bootloader 更新與韌體刷入。若腳位接錯，即使 bootloader 或韌體刷入成功，LoRa 模組仍可能無法初始化或完全沒有反應。
+
+| Adafruit RFM95W | SuperMini nRF52840 | 備註 |
+| --- | --- | --- |
+| `VIN` | `VCC` | 供應 3.3V 電源給 LoRa 模組 |
+| `GND` | `GND` | 兩板共地，任一 `GND` 均可 |
+| `SCK` | `O17` | SPI 時脈線 |
+| `MISO` | `O08` | SPI 資料輸入 |
+| `MOSI` | `O06` | SPI 資料輸出 |
+| `CS` | `O24` | 片選訊號 `Chip Select` |
+| `RST` | `O09` | 模組重置 `Reset` |
+| `G0` | `O11` | 中斷請求 `DIO0 / IRQ` |
+| `EN` | `空接` | 不需連接 |
+
+### 接線重點
+
+- `VIN -> VCC` 是 LoRa 模組供電，請確認使用的是板上標示的 `VCC / 3.3V`，不要誤接到不相容電壓。
+- `GND -> GND` 必須共地，否則 SPI 與 IRQ 訊號可能完全不穩定。
+- `SCK / MISO / MOSI / CS` 是 SPI 核心訊號，任何一條接錯都會讓 `RFM95W` 無法正常通訊。
+- `RST -> O09` 影響模組重置流程，若韌體啟動時無法正確初始化，優先檢查這條線。
+- `G0 -> O11` 是 `DIO0 / IRQ` 中斷線；若刷機成功但收發沒有反應，這條線是第一優先檢查項目。
+- `EN` 依目前方案保持空接，不需要另外拉高或接到 MCU。
 
 ## 已驗證的 bootloader 狀態
 
@@ -33,8 +62,9 @@ Date: Feb 3 2026
 SoftDevice: S140 6.1.1
 ```
 
-- 已成功刷入的 bootloader 檔案：`update-nice_nano_bootloader-0.10.0_nosd.uf2`
-- 官方下載頁面：[Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
+- 已成功刷入的 bootloader 檔案：[`update-nice_nano_bootloader-0.10.0_nosd.uf2`](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
+- 本專案根目錄已提供同版本檔案，若你偏好直接從官方取得，也可前往 [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases) 下載相同檔名版本
+- SHA-256：`357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
 - 藍牙配對 PIN 碼：`123456`
 - Windows 透過 USB 連接後，可能會看到 `nRF Serial (COM6)` 或 `nRF Serial (COM8)`
 
@@ -56,10 +86,12 @@ SoftDevice: S140 6.1.1
 ### 事前準備
 
 1. 準備一條可傳輸資料的 USB 線，將 `SuperMini nRF52840` 接到電腦。
-2. 到官方頁面下載適用於 `nice!nano / nRF52840` 的 bootloader 更新檔：
-   [https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
-3. 本專案已驗證可用的檔名為：
-   `update-nice_nano_bootloader-0.10.0_nosd.uf2`
+2. 下載 bootloader 更新檔，你有兩種方式：
+   - 直接使用本專案根目錄內提供的檔案：[update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
+   - 或自行前往官方 release 頁面下載：[Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
+3. 本專案提供檔案的 `SHA-256` 為：
+   `357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
+4. 刷機前，建議先比對雜湊值，確認你手上的檔案與官方版本完全一致。
 
 ### 更新步驟
 
@@ -140,3 +172,4 @@ SoftDevice: S140 6.1.1
 
 - [nice!nano official docs](https://nicekeyboards.com/docs/nice-nano/)
 - [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
+- [Project bootloader mirror: update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
