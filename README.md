@@ -2,7 +2,8 @@
 
 一個以低成本、容易自行組裝與刷機為目標的 Meshtastic 節點專案。
 
-本專案聚焦在使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。
+本專案聚焦在使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗適合用來長時間做為MESHTASTIC節點。
+
 
 ## 專案目標
 
