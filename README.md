@@ -70,14 +70,22 @@ SoftDevice: S140 6.1.1
 
 ## 韌體來源與編譯說明
 
-目前嘗試刷入的韌體來源專案版本如下：
+本專案的 Meshtastic 韌體是基於另一個開源專案 `faketec-RA-01SH-P` 延伸修改而來。你有兩種方式取得可用韌體：自行編譯，或直接使用本專案已驗證可刷入的成品檔案。
 
-- 上游來源：`faketecRA--01SH-P-v.2.7.12.802944f`
+### 方式 A：使用上游開源專案，自行修改後編譯
+
+- 上游專案 releases 頁面：[faketec-RA-01SH-P Releases](https://github.com/Bu1227/faketec-RA-01SH-P/releases)
+- 本專案目前參考的上游版本：`faketecRA--01SH-P-v.2.7.12.802944f`
 - 韌體目標名稱：`nrf52_promicro_diy_xtal`
+- 編譯工具：`PlatformIO`
 
-由於實際接腳配置與原始專案設定不同，不能直接使用上游預編譯版本，必須先修改對應的 `.h` 設定檔，再重新編譯產生自己的 `firmware.uf2`。
+重要提醒：如果你打算自行從上游專案下載原始碼或 release 資源來編譯，必須先修改對應 `.h` 檔內的接腳定義，再使用 `PlatformIO` 重新編譯。因為本專案使用的 `SuperMini nRF52840 + Adafruit RFM95W` 接線方式與上游預設配置不同，若不先修改 `.h` 內腳位設定，編譯後刷入也一定會失敗或無法正常驅動 LoRa 模組。
 
-換句話說，本專案的重點不是「直接拿上游 binary 即可刷入」，而是提供一個針對 `SuperMini nRF52840 + Adafruit RFM95W` 可自行調整並重編的 Meshtastic 節點做法。
+### 方式 B：直接使用本專案已編譯完成的韌體
+
+如果你不想自己修改 `.h` 檔，也不想自己使用 `PlatformIO` 編譯，可以直接下載本專案根目錄內已驗證可用的韌體：[`firmware.uf2`](./firmware.uf2)
+
+這個 `firmware.uf2` 是我依照本專案接線方式修改後自行編譯，並已確認可以安裝與啟動的版本。
 
 ## 1. 如何更新 bootloader 到最新版本
 
@@ -126,12 +134,19 @@ SoftDevice: S140 6.1.1
 
 ### 事前準備
 
-你需要先取得自己的 `firmware.uf2`。本專案的情況是：
+你需要先取得可刷入的 `firmware.uf2`，有兩種方式：
+
+1. 自行前往上游開源專案下載並處理：[faketec-RA-01SH-P Releases](https://github.com/Bu1227/faketec-RA-01SH-P/releases)
+2. 直接使用本專案根目錄已提供的成品檔案：[`firmware.uf2`](./firmware.uf2)
+
+如果你選擇使用上游專案，請注意以下事項：
 
 1. 以上游 `faketecRA--01SH-P-v.2.7.12.802944f` 為基礎。
 2. 選用目標韌體名稱 `nrf52_promicro_diy_xtal`。
-3. 因為接腳配置不一致，先修改對應的 `.h` 定義檔。
-4. 重新編譯後，輸出 `firmware.uf2`。
+3. 編譯前必須先修改對應 `.h` 檔內的接腳定義。
+4. 完成修改後，再用 `PlatformIO` 重新編譯輸出 `firmware.uf2`。
+
+如果你不想修改 `.h` 檔，也不想自己編譯，直接使用本專案提供的 [`firmware.uf2`](./firmware.uf2) 即可。
 
 ### 安裝步驟
 
@@ -173,3 +188,5 @@ SoftDevice: S140 6.1.1
 - [nice!nano official docs](https://nicekeyboards.com/docs/nice-nano/)
 - [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
 - [Project bootloader mirror: update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
+- [faketec-RA-01SH-P Releases](https://github.com/Bu1227/faketec-RA-01SH-P/releases)
+- [Project firmware mirror: firmware.uf2](./firmware.uf2)
