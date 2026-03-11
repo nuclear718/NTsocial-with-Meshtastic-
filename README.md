@@ -2,12 +2,13 @@
 
 一個以低成本、容易自行組裝與刷機為目標的 Meshtastic 節點專案。
 
-本專案聚焦在使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗適合用來長時間做為MESHTASTIC節點。
-
+本專案聚焦在使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗，適合用來長時間作為 Meshtastic 節點。
 
 ## 專案目標
 
-本專案建議的工作流如下：`LoRa + MCU 接線 -> 更新 MCU bootloader -> 刷入 firmware.uf2`
+本專案建議的工作流如下：`LoRa + MCU 接線 -> 先接上 LoRa 天線 -> 更新 MCU bootloader -> 刷入 firmware.uf2`
+
+重要提醒：在任何 USB 送電、重開機、刷機或啟動測試之前，請先把 LoRa 模組天線接好。對 `RFM95W / SX1276` 這類射頻模組而言，若在沒有接天線或沒有適當 RF 負載的情況下進入發射狀態，可能造成射頻前端承受反射功率，增加模組受損風險。雖然 bootloader 更新本身通常不會主動發射，但刷入完成後的新韌體可能在開機流程中初始化無線電，因此對使用者來說，最穩妥的做法就是一律先裝好天線再送電。
 
 - 使用便宜且容易取得的 `nRF52840` 開發板建立 Meshtastic 節點
 - 提供清楚可重現的硬體接線、bootloader 更新與韌體安裝流程
@@ -49,6 +50,7 @@ Meshtastic 針對 `nRF52840 Pro Micro` 佈局有預設腳位定義。使用 `Sup
 - `RST -> O09` 影響模組重置流程，若韌體啟動時無法正確初始化，優先檢查這條線。
 - `G0 -> O11` 是 `DIO0 / IRQ` 中斷線；若刷機成功但收發沒有反應，這條線是第一優先檢查項目。
 - `EN` 依目前方案保持空接，不需要另外拉高或接到 MCU。
+- 完成接線後，在任何 USB 送電或刷機之前，請先把 LoRa 天線接上。這是基本的射頻安全習慣。
 
 ## 已驗證的 bootloader 狀態
 
@@ -64,7 +66,7 @@ SoftDevice: S140 6.1.1
 
 - 已成功刷入的 bootloader 檔案：[`update-nice_nano_bootloader-0.10.0_nosd.uf2`](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
 - 本專案根目錄已提供同版本檔案，若你偏好直接從官方取得，也可前往 [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases) 下載相同檔名版本
-- SHA-256：`357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
+- `SHA-256`：`357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
 - 藍牙配對 PIN 碼：`123456`
 - Windows 透過 USB 連接後，可能會看到 `nRF Serial (COM6)` 或 `nRF Serial (COM8)`
 
@@ -93,13 +95,14 @@ SoftDevice: S140 6.1.1
 
 ### 事前準備
 
-1. 準備一條可傳輸資料的 USB 線，將 `SuperMini nRF52840` 接到電腦。
-2. 下載 bootloader 更新檔，你有兩種方式：
+1. 在接上 USB 送電之前，請先確認 `Adafruit RFM95W` 的天線已正確安裝完成。不要在未接天線的情況下直接啟動板子，避免後續韌體初始化無線電時讓 RF 前端承受不必要風險。
+2. 準備一條可傳輸資料的 USB 線，將 `SuperMini nRF52840` 接到電腦。
+3. 下載 bootloader 更新檔，你有兩種方式：
    - 直接使用本專案根目錄內提供的檔案：[update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
    - 或自行前往官方 release 頁面下載：[Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
-3. 本專案提供檔案的 `SHA-256` 為：
+4. 本專案提供檔案的 `SHA-256` 為：
    `357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
-4. 刷機前，建議先比對雜湊值，確認你手上的檔案與官方版本完全一致。
+5. 刷機前，建議先比對雜湊值，確認你手上的檔案與官方版本完全一致。
 
 ### 更新步驟
 
@@ -133,6 +136,8 @@ SoftDevice: S140 6.1.1
 完成 bootloader 更新後，就可以安裝 Meshtastic 韌體。
 
 ### 事前準備
+
+在接上 USB 送電與刷入韌體前，請先確認 LoRa 天線已經裝好。原因不是單純為了收訊，而是避免裝置在啟動新韌體後初始化 `RFM95W` 時，於未接天線的情況下進入發射狀態。
 
 你需要先取得可刷入的 `firmware.uf2`，有兩種方式：
 
@@ -184,7 +189,7 @@ SoftDevice: S140 6.1.1
 
 ## 免責聲明
 
-本專案提供的是社群自製、可自行編譯的 Meshtastic 節點方法，不屬於官方硬體產品。刷寫 bootloader 與韌體前，請先確認你的硬體型號、供電方式與接線配置，並自行承擔測試與修改風險。
+本專案提供的是社群自製、可自行編譯的 Meshtastic 節點方法，不屬於官方硬體產品。刷寫 bootloader 與韌體前，請先確認你的硬體型號、供電方式、天線安裝狀態與接線配置，並自行承擔測試與修改風險。
 
 ## 參考資料
 
