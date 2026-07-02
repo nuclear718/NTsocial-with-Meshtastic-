@@ -2,7 +2,7 @@
 
 一個以低成本、容易自行組裝與刷機為目標的 Meshtastic 節點專案。
 
-本專案聚焦在使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗，適合用來長時間作為 Meshtastic 節點。
+本專案聚焦在使用 `nice!nano` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗，適合用來長時間作為 Meshtastic 節點。
 
 ## 專案目標
 
@@ -19,18 +19,18 @@
 
 | 項目 | 說明 |
 | --- | --- |
-| MCU | `SuperMini nRF52840` |
+| MCU | `nice!nano` |
 | MCU 參考文件 | [nice!nano official docs](https://nicekeyboards.com/docs/nice-nano/) |
 | LoRa 晶片 | `Adafruit RFM95W` |
 | 節點類型 | 單晶片 MCU Meshtastic 節點 |
 
 ## 硬體接線
 
-Meshtastic 針對 `nRF52840 Pro Micro` 佈局有預設腳位定義。使用 `SuperMini nRF52840` 搭配 `Adafruit RFM95W` 時，請依照下表逐一接線，並仔細核對 `SuperMini nRF52840` 板子上的金色絲印文字。
+Meshtastic 針對 `nRF52840 Pro Micro` 佈局有預設腳位定義。使用 `nice!nano` 搭配 `Adafruit RFM95W` 時，請依照下表逐一接線，並仔細核對 `nice!nano` 板子上的金色絲印文字。
 
 接線順序建議先完成所有硬體接線，再進行 bootloader 更新與韌體刷入。若腳位接錯，即使 bootloader 或韌體刷入成功，LoRa 模組仍可能無法初始化或完全沒有反應。
 
-| Adafruit RFM95W | SuperMini nRF52840 | 備註 |
+| Adafruit RFM95W | nice!nano | 備註 |
 | --- | --- | --- |
 | `VIN` | `VCC` | 供應 3.3V 電源給 LoRa 模組 |
 | `GND` | `GND` | 兩板共地，任一 `GND` 均可 |
@@ -83,7 +83,7 @@ SoftDevice: S140 6.1.1
 - 韌體目標名稱：`nrf52_promicro_diy_xtal`
 - 編譯工具：`PlatformIO`
 
-重要提醒：如果你打算自行從韌體開源專案下載原始碼來編譯，必須確認對應 `.h` 檔內的接腳定義與本專案接線一致，再使用 `PlatformIO` 重新編譯。因為本專案使用的 `SuperMini nRF52840 + Adafruit RFM95W` 接線方式與通用預設配置不同，若 `.h` 內腳位設定不一致，編譯後刷入也可能無法正常驅動 LoRa 模組。
+重要提醒：如果你打算自行從韌體開源專案下載原始碼來編譯，必須確認對應 `.h` 檔內的接腳定義與本專案接線一致，再使用 `PlatformIO` 重新編譯。因為本專案使用的 `nice!nano + Adafruit RFM95W` 接線方式與通用預設配置不同，若 `.h` 內腳位設定不一致，編譯後刷入也可能無法正常驅動 LoRa 模組。
 
 ### 方式 B：直接使用本專案已編譯完成的韌體
 
@@ -98,7 +98,7 @@ SoftDevice: S140 6.1.1
 ### 事前準備
 
 1. 在接上 USB 送電之前，請先確認 `Adafruit RFM95W` 的天線已正確安裝完成。不要在未接天線的情況下直接啟動板子，避免後續韌體初始化無線電時讓 RF 前端承受不必要風險。
-2. 準備一條可傳輸資料的 USB 線，將 `SuperMini nRF52840` 接到電腦。
+2. 準備一條可傳輸資料的 USB 線，將 `nice!nano` 接到電腦。
 3. 下載 bootloader 更新檔，你有兩種方式：
    - 直接使用本專案根目錄內提供的檔案：[update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
    - 或自行前往官方 release 頁面下載：[Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
@@ -184,7 +184,7 @@ Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_
 
 若刷入後沒有正常啟動，請優先檢查：
 
-- `.h` 內的腳位定義是否與你的 `SuperMini nRF52840` 實體接線一致
+- `.h` 內的腳位定義是否與你的 `nice!nano` 實體接線一致
 - `RFM95W` 的 SPI / DIO / RESET 腳位是否對應正確
 - 產出的是否真的是給 `nrf52_promicro_diy_xtal` 使用的 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2`
 
