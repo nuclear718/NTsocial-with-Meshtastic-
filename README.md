@@ -4,6 +4,14 @@
 
 本專案聚焦在使用 `nice!nano` 搭配 `Adafruit RFM95W` LoRa 模組，提供可自行編譯與刷入的韌體流程，讓使用者能以相對便宜的硬體建立可運作的 Meshtastic 節點。nice!nano 開發板上所使用的 nRF52840 微控制器（MCU），是由挪威廠商 Nordic Semiconductor 所研發製造，特色是極低功耗，適合用來長時間作為 Meshtastic 節點。
 
+## 最新韌體正式上線
+
+`nrf52_promicro_diy_xtal` 的 Meshtastic `2.8.0.7c6b85d` 新版韌體已於 2026-07-21 正式上線。此版本由韌體來源專案 `develop` 分支的提交 `7c6b85d775bad57e0915841bb08d205ab2e3d087` 乾淨重建，並已通過 PlatformIO 建置、映像區域與 ISR 防護檢查。
+
+- 立即下載：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
+- `SHA-256`：`4905F23C4E7CD9A3FB39D9D7F42B7913B4B8278F9A8DB4D697A4BE49C4831209`
+- 韌體目標：`nrf52_promicro_diy_xtal`
+
 ## 專案目標
 
 本專案建議的工作流如下：先完成 `LoRa + MCU 接線`，再依 MCU 狀態選擇刷機流程。全新的 MCU 先更新 bootloader，再刷入新版韌體；已安裝舊版韌體的 MCU，先清除 MCU 記憶體，再刷入新版韌體。
@@ -74,12 +82,12 @@ SoftDevice: S140 6.1.1
 
 本專案的 Meshtastic 韌體來源為 [`nuclear718/faketec-RA-01SH-P`](https://github.com/nuclear718/faketec-RA-01SH-P)。這是作者 fork 下來並修正原本版本錯誤後維護的開源韌體專案，本專案收錄的新版 UF2 韌體也是以這個 fork 為基礎編譯與測試。
 
-你有兩種方式取得可用韌體：自行從這個開源專案編譯，或直接使用本專案已驗證可刷入的成品檔案。
+你有兩種方式取得可用韌體：自行從這個開源專案編譯，或直接使用本專案正式發佈的成品檔案。
 
 ### 方式 A：使用韌體開源專案，自行修改後編譯
 
 - 韌體開源專案：[nuclear718/faketec-RA-01SH-P](https://github.com/nuclear718/faketec-RA-01SH-P)
-- 本專案目前提供的新版韌體版本：`2.7.12.6ccbda8c`
+- 本專案目前提供的新版韌體版本：`2.8.0.7c6b85d`
 - 韌體目標名稱：`nrf52_promicro_diy_xtal`
 - 編譯工具：`PlatformIO`
 
@@ -87,9 +95,9 @@ SoftDevice: S140 6.1.1
 
 ### 方式 B：直接使用本專案已編譯完成的韌體
 
-如果你不想自己修改 `.h` 檔，也不想自己使用 `PlatformIO` 編譯，可以直接下載本專案根目錄內已驗證可用的新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2`](./firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2)
+如果你不想自己修改 `.h` 檔，也不想自己使用 `PlatformIO` 編譯，可以直接下載本專案根目錄內正式發佈的新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
 
-這個 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2` 是我依照本專案接線方式修改後自行編譯，並已確認可以安裝與啟動的版本。舊版 `firmware.uf2` 已不再保留。
+這個 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 是依照本專案接線方式，從最新韌體來源乾淨重建並完成建置檢查的正式版本。舊版 `2.7.12.6ccbda8c` 與 `firmware.uf2` 已不再保留。
 
 ## 1. 如何更新 bootloader 到最新版本
 
@@ -129,7 +137,7 @@ SoftDevice: S140 6.1.1
 
 ### 注意事項
 
-- `bootloader` 更新與 `Meshtastic firmware` 安裝是兩件不同的事，更新 bootloader 後還要再刷入新版韌體 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2`。
+- `bootloader` 更新與 `Meshtastic firmware` 安裝是兩件不同的事，更新 bootloader 後還要再刷入新版韌體 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`。
 - 刷錯 bootloader 可能導致裝置無法正常啟動，請務必確認目標板型與檔案名稱相符。
 - 若透過 USB 連線後在 Windows 裝置管理員看到 `nRF Serial (COM6)` 或 `nRF Serial (COM8)`，通常表示裝置已被正確識別。
 
@@ -141,21 +149,21 @@ SoftDevice: S140 6.1.1
 
 - bootloader 更新檔：[`update-nice_nano_bootloader-0.10.0_nosd.uf2`](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
 - MCU 清除檔：[`Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2`](./Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2)
-- 新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2`](./firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2)
-- 新版韌體 `SHA-256`：`DF43534375177F4F21CE105B21D0F716EE2CD473AC6E36657FE25825CFBC66B1`
+- 新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
+- 新版韌體 `SHA-256`：`4905F23C4E7CD9A3FB39D9D7F42B7913B4B8278F9A8DB4D697A4BE49C4831209`
 
 ### 全新的 MCU
 
 如果 MCU 尚未安裝過舊版 Meshtastic 韌體，刷機流程維持不變：
 
 ```text
-update-nice_nano_bootloader-0.10.0_nosd.uf2 -> firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2
+update-nice_nano_bootloader-0.10.0_nosd.uf2 -> firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2
 ```
 
 1. 讓板子進入 UF2 bootloader 模式。
 2. 複製 `update-nice_nano_bootloader-0.10.0_nosd.uf2` 到 UF2 磁碟機根目錄。
 3. 等待板子自動重新啟動後，再次進入 UF2 bootloader 模式。
-4. 複製 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2` 到 UF2 磁碟機根目錄。
+4. 複製 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 到 UF2 磁碟機根目錄。
 5. 等待磁碟機自動消失並讓板子重新開機。
 
 ### 已安裝舊版本的 MCU
@@ -163,14 +171,14 @@ update-nice_nano_bootloader-0.10.0_nosd.uf2 -> firmware-nrf52_promicro_diy_xtal-
 如果 MCU 原本已刷入舊版 `firmware.uf2`，建議先清除 MCU 記憶體，再刷入新版韌體：
 
 ```text
-Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2
+Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2
 ```
 
 1. 讓板子進入 UF2 bootloader 模式。
 2. 複製 `Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2` 到 UF2 磁碟機根目錄。
 3. 等待清除流程完成，磁碟機消失或板子重新啟動後，不要拔線。
 4. 再次讓板子進入 UF2 bootloader 模式。
-5. 複製 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2` 到 UF2 磁碟機根目錄。
+5. 複製 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 到 UF2 磁碟機根目錄。
 6. 等待磁碟機自動消失並讓板子重新開機。
 
 第一次啟動時請多等幾秒讓系統完成初始化。初始化完成後，再用 Meshtastic App 或其他管理工具搜尋裝置；若系統要求藍牙配對 PIN，輸入：`123456`。
@@ -186,7 +194,7 @@ Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_
 
 - `.h` 內的腳位定義是否與你的 `nice!nano` 實體接線一致
 - `RFM95W` 的 SPI / DIO / RESET 腳位是否對應正確
-- 產出的是否真的是給 `nrf52_promicro_diy_xtal` 使用的 `firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2`
+- 產出的是否真的是給 `nrf52_promicro_diy_xtal` 使用的 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`
 
 ## 建議的開源專案結構
 
@@ -207,4 +215,4 @@ Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_
 - [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases)
 - [Project bootloader mirror: update-nice_nano_bootloader-0.10.0_nosd.uf2](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
 - [Firmware source: nuclear718/faketec-RA-01SH-P](https://github.com/nuclear718/faketec-RA-01SH-P)
-- [Project firmware mirror: firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2](./firmware-nrf52_promicro_diy_xtal-2.7.12.6ccbda8c.uf2)
+- [Project firmware mirror: firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
