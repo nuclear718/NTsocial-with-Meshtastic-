@@ -6,10 +6,10 @@
 
 ## 最新韌體正式上線
 
-`nrf52_promicro_diy_xtal` 的 Meshtastic `2.8.0.7c6b85d` 新版韌體已於 2026-07-21 正式上線。此版本由韌體來源專案 `develop` 分支的提交 `7c6b85d775bad57e0915841bb08d205ab2e3d087` 乾淨重建，並已通過 PlatformIO 建置、映像區域與 ISR 防護檢查。
+`nrf52_promicro_diy_xtal` 的最新韌體已於 2026-07-21 正式上線。本次為同版號更新，版本識別維持 Meshtastic `2.8.0.7c6b85d`；內容已更新藍牙配對設定，並加入舊預設值的自動遷移，因此既有裝置更新後也會套用。成品以韌體來源專案 `develop` 分支的提交 `7c6b85d775bad57e0915841bb08d205ab2e3d087` 為基底重新編譯，PlatformIO 建置結果為 0 errors。
 
 - 立即下載：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
-- `SHA-256`：`4905F23C4E7CD9A3FB39D9D7F42B7913B4B8278F9A8DB4D697A4BE49C4831209`
+- `SHA-256`：`3004FF90251B351A8F67840A777263E0F90C1E5CC23E77202B41F8DDCB62A89D`
 - 韌體目標：`nrf52_promicro_diy_xtal`
 
 ## 專案目標
@@ -75,7 +75,6 @@ SoftDevice: S140 6.1.1
 - 已成功刷入的 bootloader 檔案：[`update-nice_nano_bootloader-0.10.0_nosd.uf2`](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
 - 本專案根目錄已提供同版本檔案，若你偏好直接從官方取得，也可前往 [Adafruit nRF52 Bootloader Releases](https://github.com/adafruit/Adafruit_nRF52_Bootloader/releases) 下載相同檔名版本
 - `SHA-256`：`357a297bf5871478c5b6d871d05c9f023850ee9a084e0b5178669419b92ee7c8`
-- 藍牙配對 PIN 碼：`123456`
 - Windows 透過 USB 連接後，可能會看到 `nRF Serial (COM6)` 或 `nRF Serial (COM8)`
 
 ## 韌體來源與編譯說明
@@ -97,7 +96,9 @@ SoftDevice: S140 6.1.1
 
 如果你不想自己修改 `.h` 檔，也不想自己使用 `PlatformIO` 編譯，可以直接下載本專案根目錄內正式發佈的新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
 
-這個 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 是依照本專案接線方式，從最新韌體來源乾淨重建並完成建置檢查的正式版本。舊版 `2.7.12.6ccbda8c` 與 `firmware.uf2` 已不再保留。
+這個 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 是依照本專案接線方式，從最新韌體來源重新編譯並完成建置檢查的正式版本；2026-07-21 的同版號更新已納入新的藍牙配對設定與舊預設值自動遷移。舊版 `2.7.12.6ccbda8c` 與 `firmware.uf2` 已不再保留。
+
+<sub>配對備註：本版固定藍牙 PIN 為 `354984`。</sub>
 
 ## 1. 如何更新 bootloader 到最新版本
 
@@ -150,7 +151,7 @@ SoftDevice: S140 6.1.1
 - bootloader 更新檔：[`update-nice_nano_bootloader-0.10.0_nosd.uf2`](./update-nice_nano_bootloader-0.10.0_nosd.uf2)
 - MCU 清除檔：[`Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2`](./Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2)
 - 新版韌體：[`firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2`](./firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2)
-- 新版韌體 `SHA-256`：`4905F23C4E7CD9A3FB39D9D7F42B7913B4B8278F9A8DB4D697A4BE49C4831209`
+- 新版韌體 `SHA-256`：`3004FF90251B351A8F67840A777263E0F90C1E5CC23E77202B41F8DDCB62A89D`
 
 ### 全新的 MCU
 
@@ -181,13 +182,13 @@ Meshtastic_nRF52_factory_erase_v3_S140_6.1.0.uf2 -> firmware-nrf52_promicro_diy_
 5. 複製 `firmware-nrf52_promicro_diy_xtal-2.8.0.7c6b85d.uf2` 到 UF2 磁碟機根目錄。
 6. 等待磁碟機自動消失並讓板子重新開機。
 
-第一次啟動時請多等幾秒讓系統完成初始化。初始化完成後，再用 Meshtastic App 或其他管理工具搜尋裝置；若系統要求藍牙配對 PIN，輸入：`123456`。
+第一次啟動時請多等幾秒讓系統完成初始化。初始化完成後，再用 Meshtastic App 或其他管理工具搜尋裝置；若系統要求藍牙配對 PIN，請使用上方「韌體來源與編譯說明」中的本版固定 PIN。
 
 ### 安裝完成後檢查
 
 - 裝置可以正常開機
 - 藍牙可以被搜尋到
-- 可使用 PIN `123456` 完成配對
+- 可使用本版固定 PIN 完成配對
 - LoRa 模組能被韌體正確初始化
 
 若刷入後沒有正常啟動，請優先檢查：
